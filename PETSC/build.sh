@@ -1,6 +1,8 @@
 #!/bin/bash
 basn=`basename $1 .c`
 
-mpicc -Wall -I/usr/local/petsc-3.8.3_openmpi_gnu/include $1 \
-/usr/local/petsc-3.8.3_openmpi_gnu/include/libpetsc.a -o $basn.x
+# Using static lib
+mpicc $1 -I/usr/local/petsc-3.8.3_openmpi_gnu/include \
+/usr/local/petsc-3.8.3_openmpi_gnu/lib/libpetsc.a \
+-lblas -llapack -lm -lX11 -ldl -o $basn.x
 
