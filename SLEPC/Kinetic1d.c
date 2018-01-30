@@ -1,7 +1,7 @@
 #include "slepceps.h"
 
 static char help[] =
-"Standard symmetric eigenproblem corresponding to the Laplacian\n"
+"Standard symmetric eigenproblem corresponding to the Kinetic\n"
 "operator in 1 dimension.\n\n"
 "The command line options are:\n"
 "  -n <n>, where <n> = number of grid subdivisions = matrix dimension.\n\n";
@@ -43,14 +43,14 @@ int main(int argc, char **argv)
   for(i = Istart; i < Iend; i++) {
     // lower subdiagonal
     if( i > 0) {
-      ierr = MatSetValue( A, i, i-1, -1.0, INSERT_VALUES); CHKERRQ(ierr);
+      ierr = MatSetValue( A, i, i-1, 1.0, INSERT_VALUES); CHKERRQ(ierr);
     }
     // upper subdiagonal
     if( i < n-1 ) {
-      ierr = MatSetValue( A, i, i+1, -1.0, INSERT_VALUES); CHKERRQ(ierr);
+      ierr = MatSetValue( A, i, i+1, 1.0, INSERT_VALUES); CHKERRQ(ierr);
     }
     // diagonal
-    ierr = MatSetValue( A, i, i, 2.0, INSERT_VALUES ); CHKERRQ(ierr);
+    ierr = MatSetValue( A, i, i, -2.0, INSERT_VALUES ); CHKERRQ(ierr);
   }
   // Assembly the matrix
   ierr = MatAssemblyBegin( A, MAT_FINAL_ASSEMBLY ); CHKERRQ(ierr);
@@ -111,8 +111,14 @@ int main(int argc, char **argv)
       ierr = EPSGetEigenpair( eps, i, &kr, &ki, xr, xi ); CHKERRQ(ierr);
       // Compute the relative error associated to each eigenpair
       ierr = EPSComputeError( eps, i, EPS_ERROR_RELATIVE, &error); CHKERRQ(ierr);
+#if defined(PETSC_USE_COMPLEX)
+      printf("Pass here ...\n");
+      re = PetscRealPart(kr);
+      im = PetscImaginaryPart(kr);
+#else
       re = kr;
       im = ki;
+#endif
       if ( im != 0.0 ) {
         ierr = PetscPrintf( PETSC_COMM_WORLD,
                  " %9f%+9fi %12g\n", (double)re, (double)im, 

@@ -2,7 +2,7 @@
 
 static char help[] = "Simple Hello World example program in SLEPC\n";
 
-int main( int argc, char **argv)
+int main( int argc, char **argv )
 {
   int ierr;
 
