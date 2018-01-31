@@ -1,8 +1,9 @@
-#!/bin/bash
-basn=`basename $1 .c`
+export PETSC_DIR=/usr/local/petsc-3.8.3_openmpi_gnu/
 
-# Using static lib
-mpicc -Wall $1 -I/usr/local/petsc-3.8.3_openmpi_gnu/include \
-/usr/local/petsc-3.8.3_openmpi_gnu/lib/libpetsc.a \
--lblas -llapack -lm -lX11 -ldl -o $basn.x
+export INC_PETSC=$PETSC_DIR/include/
+
+export LIB_PETSC="-L$PETSC_DIR -lpetsc"
+
+basnam=`basename $1 .c`
+mpicc -I$INC_PETSC $1 $LIB_PETSC -o $basnam.x
 
