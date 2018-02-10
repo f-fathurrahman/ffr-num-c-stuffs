@@ -112,7 +112,6 @@ int main( int argc, char** argv )
   cublasHandle_t cublasHandle = 0;
   cublasStatus_t cublasStatus;
   cublasStatus = cublasCreate( &cublasHandle );
-//  printf("Creating CUBLAS context: cublasStatus = %d\n", cublasStatus);
 
   // XXX: should check cublasStatus
 
